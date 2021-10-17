@@ -1,24 +1,23 @@
-let playerAction = process.argv[process.argv.length - 1]
-console.log(playerAction)
+const game = require('./game')
 
-let computerAction
-let random = Math.random() * 3
-if (random < 1) {
-    computerAction = 'rock'
-} else if (random > 2) {
-    computerAction = 'scissor'
-} else {
-    computerAction = 'paper'
-}
+// let playerAction = process.argv[process.argv.length - 1]
+// console.log('you choose', playerAction)
+// const result = game(playerAction)
 
-if (computerAction === playerAction) {
-    console.log('Draw')
-} else if (
-    (computerAction === 'rock' && playerAction === 'paper') ||
-    (computerAction === 'scissor' && playerAction === 'rock') ||
-    (computerAction === 'paper' && playerAction === 'scissor')
-) {
-    console.log('You win')
-} else {
-    console.log('You lose')
-}
+let count = 3
+
+// 启动一个进程持续运行
+process.stdin.on('data', e => {
+    const playerAction = e.toString().trim()
+    console.log('you choose', playerAction)
+
+    const result = game(playerAction)
+
+    count += result
+    console.log(count)
+    
+    if(count === 0) {
+        console.log('you are hacker, bye bye')
+        process.exit()
+    }
+})
