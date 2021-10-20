@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>石头剪刀布</title>
+    <style>
+        .box {
+            width: 300px;
+            height: 600px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+
+        .control {
+            width: 300px;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .control-box {
+            width: 80px;
+            height: 40px;
+            border: 1px solid #000;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="box">
+            <ul id="list" class="list"></ul>
+        </div>
+        <div class="control">
+            <div id="rock" class="control-box">石头</div>
+            <div id="scissor" class="control-box">剪刀</div>
+            <div id="paper" class="control-box">布</div>
+        </div>
+    </div>
+
+    <script>
+        const $button = {
+            rock: document.getElementById('rock'),
+            scissor: document.getElementById('scissor'),
+            paper: document.getElementById('paper')
+        }
+
+        const $list = document.getElementById('list')
+
+        Object.keys($button).forEach(key => {
+            $button[key].addEventListener('click', () => {
+                fetch(`http://${location.host}/game?action=${key}`)
+                    .then(res => {
+                        return res.text()
+                    })
+                    .then(res => {
+                        const $li = document.createElement('li')
+                        $li.innerHTML = res
+                        $list.appendChild($li)
+                    })
+            })
+        })
+    </script>
+</body>
+
+</html>
