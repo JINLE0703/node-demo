@@ -6,6 +6,9 @@ const querystring = require('querystring')
 const game = require('./game')
 
 let playerWon = 0
+let lastAction = ''
+let hackerTimes = 0
+let isHacker = false
 
 http.createServer((request, response) => {
     const parseUrl = url.parse(request.url)
@@ -25,9 +28,23 @@ http.createServer((request, response) => {
         const query = querystring.parse(parseUrl.query)
         const playAction = query.action
 
+        if (playAction === lastAction) {
+            hackerTimes++
+        } else {
+            lastAction = playAction
+            hackerTimes = 0
+        }
+
+        if (hackerTimes >= 3) {
+            isHacker = true
+            response.writeHead(400)
+            response.end('你出老千！')
+            return
+        }
+
         const gameResult = game(playAction)
         
-        if (playerWon >= 3) {
+        if (playerWon >= 3 || isHacker) {
             response.writeHead(500)
             response.end('我不和你玩了！')
             return
